@@ -1,0 +1,252 @@
+/* Сброс базовых стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Основные переменные темы */
+:root {
+    --primary-bg: #1a1a1a; /* Темный фон */
+    --secondary-bg: #f9f9f9; /* Светлый фон для контента */
+    --accent-color: #00aaff; /* Акцентный синий */
+    --text-color: #333;
+    --header-bg: #2a2a2a;
+    --footer-bg: #222;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Тело страницы */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden; /* Убираем горизонтальный скролл */
+}
+
+/* Общие контейнеры */
+.container-full {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Шапка сайта */
+.site-header {
+    background-color: var(--header-bg);
+    color: white;
+    padding: 15px 0;
+}
+.logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+.menu ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+.menu li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+.menu li a:hover {
+    color: var(--accent-color);
+}
+
+/* Внутренний блок контента */
+.container-inner {
+    background-color: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+/* Заголовок страницы */
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+/* --- НОВОЕ РАСПОЛОЖЕНИЕ ЭЛЕМЕНТОВ (УДОБНОЕ) --- */
+
+/* Холст для модели (закреплен сверху) */
+#canvas {
+    width: calc(100% - (40px * .7));
+    height: calc(60vh - (40px * .7)); /* Высота относительно окна */
+    background-color:#ccc;
+    border-radius:16px;
+    
+    position: sticky; /* Закрепляем */
+    top: 70px; /* Ниже шапки (фиксированное значение) */
+    
+    z-index: 10; /* Чтобы был выше контента */
+}
+
+/* Блок управления (под холстом) */
+.controls-wrapper {
+    margin-top: -35px; /* Подтягиваем к холсту */
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    background-color: white; /* Чтобы перекрыть тень холста */
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    
+    width: 100%;
+    
+    /* Адаптивность для мобильных */
+    @media (max-width: 768px) {
+        gap: 15px;
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 450px; /* Ограничиваем ширину на моб. устройствах */
+        margin-bottom: 35px; /* Отступ снизу для форм */
+        padding-bottom: 35px; /* Отступ для красоты */
+        border-bottom: 1px solid #eee; /* Разделитель */
+        margin-top: -35px; /* Компенсируем отступ wrapper-а */
+        padding-top: 35px; /* Внутренний отступ */
+        background-color:#fff; /* Фон для блока управления */
+        border-radius:16px; /* Скругление блока управления */
+        box-shadow: 0 -4px rgba(0,0,0,.1); /* Тень снизу */
+        position: relative; z-index: 5; /* Чтобы тень не перекрывала холст */
+        
+        .range-container { min-width: auto; } /* Сброс ширины ползунков на моб. */
+        
+        .my-button { width: 100%; } /* Кнопки на всю ширину */
+        
+        form { max-width:none; width:100%; } /* Формы на всю ширину */
+        
+        #canvas { margin-top:-35px; } /* Компенсируем отступ холста на моб. */
+        
+        .controls-wrapper { margin-top:-35px; } /* Компенсируем отступ wrapper-а на моб. */
+        
+        .controls-wrapper::before { /* Псевдоэлемент для красивой тени на моб. */
+            content:"";
+            position:absolute; top:-35px; left:-20px; right:-20px;
+            height:35px; background:#fff; z-index:-1; box-shadow:0 -4px rgba(0,0,0,.1);
+            border-radius:16px 16px 0 0;
+        }
+        
+        #canvas { margin-top:-35px !important; } /* Приоритет для холста на моб. */
+     }
+}
+
+/* Кнопки (без спрайтов, чистый текст) */
+.my-button {
+    background-color: var(--accent-color);
+    color: white !important;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    
+    transition:
+       background-color .3s ease,
+       transform .1s,
+       box-shadow .2s,
+       opacity .3s ease,
+       transform .3s ease,
+       box-shadow .3s ease,
+       background-position .3s ease,
+       background-size .3s ease,
+       color .3s ease,
+       border-radius .3s ease,
+       min-height .3s ease,
+       padding-left .3s ease,
+       padding-right .3s ease,
+       width .3s ease,
+       min-width .3s ease,
+       height .3s ease,
+       min-height .3s ease,
+       padding-top .3s ease,
+       padding-bottom .3s ease,
+       margin-top .3s ease,
+       margin-bottom .3s ease,
+       box-shadow .3s ease,
+       transform .3s ease,
+       opacity .3s ease,
+       background-color .3s ease,
+       color .3s ease,
+       border-radius .3s ease,
+       border .3s ease,
+       filter .3s ease,
+       backdrop-filter .3s ease,
+       border-width .3s ease,
+       border-style .3s ease,
+       border-color .3s ease,
+       background-image .3s ease,
+       background-position .3s ease,
+       background-size .3s ease,
+       background-repeat .3s ease,
+       background-attachment .3s ease,
+       background-clip .3s ease,
+       background-origin .3s ease,
+       background-blend-mode .3s ease,
+      filter .3s ease-in-out,
+      backdrop-filter .3s ease-in-out
+     ;
+     
+     &--primary {
+          background-color:#fff !important;
+          color:#0AAFF !important;
+          box-shadow:none !important;
+          border:solid #eee thin !important ;
+          
+          &--secondary {
+              background:#fafafa !important ;
+              border:solid #ddd thin !important ;
+          }
+      }
+ }
+.my-button:focus { outline:none; }
+.my-button--primary.my-button--secondary {
+     background:#fafafa !important ;
+     border:solid #ddd thin !important ;
+ }
+
+/* Ползунки и подписи */
+.range-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     min-width: calc(33% - 25px); /* Адаптивность для десктопа */
+ }
+
+ input[type="range"] {
+     width: calc(100% - 40px);
+     margin-top: .5rem;
+     accent-color: var(--accent-color); /* Цвет ползунка */
+ }
+ label {
+     font-size:.95rem; color:#555; margin-bottom:.3rem;
+ }
+ span {
+     margin-top:.5rem; font-weight:600; color:#333; font-size:.9rem;
+ }
+
+/* Футер */
+footer {
+    background-color: var(--footer-bg);
+    color: white;
+    text-align:center;
+    padding: 25px 15px;
+}
+footer p { margin-bottom:.8rem; }
+footer ul { list-style:none; padding-left:none; display:flex; justify-content:center; gap:.8rem;}
+footer ul li a { color:#fff !important; text-decoration:none; font-size:.9rem;}

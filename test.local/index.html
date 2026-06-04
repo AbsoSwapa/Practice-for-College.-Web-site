@@ -1,0 +1,311 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Модели</title>
+    <style>
+      /* ИЗМЕНЕНИЯ НАЧИНАЮТСЯ ЗДЕСЬ */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0; /* Убираем внешний отступ */
+        padding: 0; /* Убираем внутренний отступ */
+        background-color: #f0f0f0;
+      }
+      
+      .container-full {
+        width: 100%; /* Растягиваем на всю ширину экрана */
+      }
+
+      .site-header { background: #333; color: white; padding: 10px; text-align: center; }
+      .menu ul { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; }
+      .menu li a { color: white; text-decoration: none; }
+      
+      /* Контейнер .container теперь используется для обёртки, стили для контента перенесены в .container-inner */
+      .container { 
+        width: 100%;
+      }
+
+      .controls { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px; }
+      .range-container { display: flex; flex-direction: column; align-items: center; }
+      #canvas { width: 100%; height: 600px; background-color: #ccc; border-radius: 8px; }
+      footer { background: #333; color: white; text-align: center; padding: 15px; margin-top: 40px; }
+      .hidden-file-input { display: none; }
+    </style>
+  </head>
+  
+  <body>
+
+    <header class="site-header">
+      <div class="container container-full">
+        <div class="logo">Это тип ЛОГОво</div>
+        <nav class="menu">
+          <ul>
+            <li><a href="#">Главная</a></li>
+            <li><a href="#">Услуги</a></li>
+            <li><a href="#">Контакты</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Добавлен новый внутренний контейнер для контента -->
+    <div class="container container-full">
+      <div class="container-inner">
+        <h1 style="text-align:center">Интерактивные 3D Модели</h1>
+
+        <!-- Блок управления -->
+        <div class="controls">
+          <button class="my-button" id="add">Добавить модель</button>
+          <button class="my-button" id="del">Удалить модель</button>
+
+          <div class="range-container">
+            <label for="rangeX">По оси X</label>
+            <input type="range" id="rangeX" min="-180" max="180" value="0" oninput="this.nextElementSibling.innerText = this.value + '°'">
+            <span id="rangeValueX">0°</span>
+          </div>
+
+          <div class="range-container">
+            <label for="rangeY">По оси Y</label>
+            <input type="range" id="rangeY" min="-180" max="180" value="0" oninput="this.nextElementSibling.innerText = this.value + '°'">
+            <span id="rangeValueY">0°</span>
+          </div>
+
+          <div class="range-container">
+            <label for="rangeZ">По оси Z</label>
+            <input type="range" id="rangeZ" min="-180" max="180" value="0" oninput="this.nextElementSibling.innerText = this.value + '°'">
+            <span id="rangeValueZ">0°</span>
+          </div>
+
+          <!-- НОВЫЙ БЕГУНОК МАСШТАБА -->
+          <div class="range-container">
+            <label for="rangeScale">Масштаб</label>
+            <input type="range" id="rangeScale" min="0.1" max="3" step="0.1" value="1" oninput="this.nextElementSibling.innerText = this.value">
+            <span id="rangeValueScale">1</span>
+          </div>
+
+          <!-- Мастерки -->
+          <form id="masterForm">
+            <label><input type="radio" id="radioButton1" name="master" value="master1" checked> Master1 (Карандаш)</label> 
+            <label><input type="radio" id="radioButton2" name="master" value="master2"> Master2 (Светильник)</label>
+            <label><input type="radio" id="radioButton3" name="master" value="master3"> Master3 (Minecraft)</label>
+          </form>
+
+          <form id="checkebox">
+            <input type="checkbox" name="slave"> Слейв 1</label><br>
+            <input type="checkbox" name="slave"> Слейв 2</label><br>
+            <input type="checkbox" name="slave"> Слейв 3</label><br>
+            <input type="checkbox" name="slave"> Слейв 4</label><br>
+            <input type="checkbox" name="slave"> Слейв 5</label><br>
+            <input type="checkbox" name="slave"> Слейв 6</label><br>
+            <input type="checkbox" name="slave"> Слейв 7</label><br>
+            <input type="checkbox" name="slave"> Слейв 8</label><br>
+            <input type="checkbox" name="slave"> Слейв 9</label><br>
+            <input type="checkbox" name="slave"> Слейв 10</label><br>
+            <input type="checkbox" name="slave"> Слейв 11</label><br>
+            <input type="checkbox" name="slave"> Слейв 12</label><br>
+            <input type="checkbox" name="slave"> Слейв 13</label><br>
+            <input type="checkbox" name="slave"> Слейв 14</label><br>
+            <input type="checkbox" name="slave"> Слейв 15</label><br>
+            <input type="checkbox" name="slave"> Слейв 16</label><br>
+            <input type="checkbox" name="slave"> Слейв 17</label><br>
+            <input type="checkbox" name="slave"> Слейв 18</label><br>
+            <input type="checkbox" name="slave"> Слейв 19</label><br>
+            <input type="checkbox" name="slave"> Слейв 20</label><br>
+          </form>
+
+          <!-- Скрытый input для загрузки файлов -->
+          <input type="file" accept=".glb,.gltf,.obj,.fbx" class="hidden-file-input" id="fileInput">
+        </div>
+
+        <!-- Контейнер для моделей -->
+        <div id="canvas"></div>
+
+      </div>
+    </div>
+
+    <footer>
+      <div class="site-backer">
+        <p>© 2026 Название компании</p>
+        <ul>
+          <li><a href="/about">О нас</a></li>
+          <li><a href="/authors">Да мы очень любим себя. У нас сайт про нас</a></li>
+        </ul>
+      </footer>
+
+    <!-- Библиотека Three.js -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <!-- Скрипт логики -->
+    <script type="module">
+      import * as THREE from 'three';
+      import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf0f0f0);
+
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, 600);
+      document.getElementById('canvas').appendChild(renderer.domElement);
+
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(5, 5, 5).normalize();
+      scene.add(light);
+
+      const rotation = { x: 0, y: 0, z: 0 };
+
+      document.getElementById('rangeX').addEventListener('input', (e) => rotation.x = e.target.valueAsNumber * Math.PI / 180);
+      document.getElementById('rangeY').addEventListener('input', (e) => rotation.y = e.target.valueAsNumber * Math.PI / 180);
+      document.getElementById('rangeZ').addEventListener('input', (e) => rotation.z = e.target.valueAsNumber * Math.PI / 180);
+      
+      let scale = 1;
+      
+      document.getElementById('rangeScale').addEventListener('input', (e) => {
+         scale = parseFloat(e.target.value); 
+         e.target.nextElementSibling.innerText = scale.toFixed(1); 
+         render(); 
+       });
+
+       const loader = new GLTFLoader();
+      
+       let currentMasterModel = null;
+       const userModels = [];
+
+       const masterModelsMap = {
+         master1: 'pencil.glb',
+         master2: 'svetilnik.glb',
+         master3: 'skybox_minecraft_daylight.glb'
+       };
+       
+       function loadMasterModel(masterKey) {
+         const modelPath = masterModelsMap[masterKey];
+         
+         if (currentMasterModel) {
+           scene.remove(currentMasterModel);
+         }
+         
+         loader.load(modelPath, (gltf) => {
+           currentMasterModel = gltf.scene;
+           currentMasterModel.position.set(0, 0, 0); 
+           scene.add(currentMasterModel);
+           render();
+         }, undefined, (error) => console.error('Ошибка загрузки модели:', error));
+       }
+       
+       loadMasterModel('master1'); 
+
+       document.getElementById('add').addEventListener('click', () => {
+         document.getElementById('fileInput').click();
+       });
+       
+       document.getElementById('fileInput').addEventListener('change', (event) => {
+         const file = event.target.files[0];
+         if (!file) return;
+         
+         const reader = new FileReader();
+         reader.onload = function(e) {
+           loader.parse(e.target.result, '', (gltf) => {
+             const model = gltf.scene;
+             scene.add(model);
+             userModels.push(model); // Просто добавляем в массив, позиция будет задана в render()
+             render();
+           });
+         };
+         reader.readAsArrayBuffer(file);
+       });
+       
+       document.getElementById('del').addEventListener('click', () => {
+         if (userModels.length > 0) {
+           const lastModel = userModels.pop();
+           scene.remove(lastModel);
+           render(); // Перерисовываем, чтобы заполнить пустое место в сетке
+         } else if (currentMasterModel) {
+           scene.remove(currentMasterModel);
+           currentMasterModel = null;
+           loadMasterModel('master1');
+         }
+       });
+       
+       document.querySelectorAll('input[name="master"]').forEach(radio => {
+         radio.addEventListener('change', (event) => {
+           const selectedMaster = event.target.value;
+           
+           if (currentMasterModel) {
+             scene.remove(currentMasterModel);
+             currentMasterModel = null;
+             loadMasterModel(selectedMaster);
+           }
+         });
+       });
+
+
+       // --- НОВАЯ ЛОГИКА РАСПОЛОЖЕНИЯ В СЕТКУ ---
+       const GRID_SPACING = 2;
+       const MAX_COLUMNS = 4;
+
+       function getGridPosition(index) {
+         // Вычисляем номер колонки и строки для модели с индексом `index`
+         const colIndex = index % MAX_COLUMNS;
+         const rowIndex = Math.floor(index / MAX_COLUMNS);
+         
+         // Вычисляем координаты X и Y
+         // Главная модель стоит в (0,0), поэтому сетка начинается справа от неё
+         const xPos = GRID_SPACING + colIndex * GRID_SPACING;
+         const yPos = -rowIndex * GRID_SPACING;
+         
+         return new THREE.Vector3(xPos, yPos, 0);
+       }
+
+
+       function render() {
+         if (currentMasterModel) {
+            currentMasterModel.rotation.x = rotation.x;
+            currentMasterModel.rotation.y = rotation.y;
+            currentMasterModel.rotation.z = rotation.z;
+            currentMasterModel.scale.set(scale, scale, scale); 
+            // Главная модель всегда в центре
+            currentMasterModel.position.set(0, 0, 0); 
+         }
+         
+         // Применяем новые позиции для всех пользовательских моделей в виде сетки
+         userModels.forEach((model, index) => {
+            model.rotation.x = rotation.x;
+            model.rotation.y = rotation.y;
+            model.rotation.z = rotation.z;
+            model.scale.set(scale, scale, scale); 
+            
+            // Устанавливаем новую позицию из сетки
+            model.position.copy(getGridPosition(index));
+            
+            // Небольшая корректировка Z, чтобы модели не "съедали" друг друга при вращении
+            model.position.z = -Math.abs(model.position.y) * 0.1; 
+         });
+         
+         renderer.render(scene, camera);
+       }
+       
+       function animate() {
+         requestAnimationFrame(animate);
+         render(); 
+       }
+       animate();
+
+
+       window.addEventListener('resize', () => {
+         camera.aspect = window.innerWidth / window.innerHeight;
+         camera.updateProjectionMatrix();
+         renderer.setSize(window.innerWidth, renderer.domElement.offsetHeight);
+       });
+
+    </script>
+</html>
